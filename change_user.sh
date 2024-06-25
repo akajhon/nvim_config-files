@@ -1,17 +1,23 @@
 #!/bin/bash
 
 # Nome antigo e novo do usuário
-OLD_USER="Simulation"
+OLD_USER="simulation"
 NEW_USER="NovoUsuario"
 
+# Verificar e matar processos do usuário
+ps -u $OLD_USER | awk '{print $1}' | xargs sudo kill -9
+
+# Forçar logout do usuário
+sudo pkill -u $OLD_USER
+
 # Renomear usuário
-usermod -l $NEW_USER $OLD_USER
+sudo usermod -l $NEW_USER $OLD_USER
 
 # Renomear diretório home
-usermod -d /home/$NEW_USER -m $NEW_USER
+sudo usermod -d /home/$NEW_USER -m $NEW_USER
 
 # Renomear grupo
-groupmod -n $NEW_USER $OLD_USER
+sudo groupmod -n $NEW_USER $OLD_USER
 
 # Alterar senha do usuário
-echo "$NEW_USER:NovaSenha" | chpasswd
+echo "$NEW_USER:NovaSenha" | sudo chpasswd
